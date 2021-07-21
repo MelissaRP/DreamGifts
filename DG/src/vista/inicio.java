@@ -3,19 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dg;
+package vista;
 
 /**
  *
  * @author Usuario
  */
-public class DREAM_GIFTS {
+public class inicio {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // TODO code application logic here
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Vista().setVisible(true);
+
+            }
+
+        });
     }
-    
 }
