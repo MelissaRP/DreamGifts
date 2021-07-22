@@ -306,7 +306,15 @@ public class Vista extends javax.swing.JFrame {
     
     // metodo para Editar Proveedores
     void editarPorveedor(){
+        int id = 0;
+        int codComuna = 0; int codDire = 0;
+        
+        
          try {
+            
+            String comuna = cbxComunaProveedor.getSelectedItem().toString();
+            String calle = txtDireccionProveedor.getText().trim();
+            int nro = Integer.parseInt(txtNumDireProveedor.getText().trim());
 
             String rut =(txtRutProveedor.getText());
             String URL_bd = "jdbc:mysql://localhost/mydb";
@@ -314,28 +322,53 @@ public class Vista extends javax.swing.JFrame {
             String contraseña = "";// depende de como entre a la consola de mysql
             Connection cn = DriverManager.getConnection(URL_bd, usuario, contraseña);
             
-            PreparedStatement pst = cn.prepareStatement("update proveedor set rut=?,dv=?,nombre=?,celular=?,telefono=?,fecha_nac=?,email=?,redsocial=? where rut=" + rut);
-
-            pst.setString(1, txtRutCliente.getText().trim());
-            pst.setString(2, txtDvCliente.getText().trim());
-            pst.setString(3, txtNombreCliente.getText().trim());
-            pst.setString(4, txtCelularCliente.getText().trim());
-            pst.setString(5, txtTelefonoCliente.getText().trim());
-            pst.setString(6, ((JTextField) FechaNacimientoCliente.getDateEditor().getUiComponent()).getText());
-            pst.setString(7, txtEmailCliente.getText().trim());
-            pst.setString(8, cbRedSocialCliente.getSelectedItem().toString());         
+            // buscamos el codigo de comuna
+            PreparedStatement pst4 =  cn.prepareStatement("select cod_comuna from comuna where nombre ='"+comuna+"'");
+            ResultSet rs1 = pst4.executeQuery();
+            if (rs1.next()) {
+            codComuna= rs1.getInt("cod_comuna");
+            }
             
+            
+            // buscamos el codigo de la direccion
+            PreparedStatement pst5 =  cn.prepareStatement("select cod_direccion from direccion where calle ='"+calle+"' and nro ='"+nro+"' ");
+            ResultSet rs2 = pst5.executeQuery();
+            if (rs2.next()) {
+            codDire= rs2.getInt("cod_direccion");
+            }            
+            
+            PreparedStatement pst1 = cn.prepareStatement("update comuna set nombre=? where nombre='"+comuna+"' ");
+            pst1.setString(1, cbxComunaProveedor.getSelectedItem().toString());
+            pst1.executeUpdate(); 
+            
+            PreparedStatement pst2 = cn.prepareStatement("update direccion set calle=?, nro=?,complemento=? where calle ='"+calle+"' and nro ='"+nro+"' ");
+            
+            pst2.setString(1, txtDireccionProveedor.getText().trim());
+            pst2.setInt(2, Integer.parseInt(txtNumDireProveedor.getText().trim().toString()));
+            pst2.setString(3, txtComplementoProveedor.getText().trim());
+            
+            pst2.executeUpdate();            
+            
+            PreparedStatement pst3 = cn.prepareStatement("update proveedor set rut=?,razon_social=?,nombre_contacto=?,fono=?,email=? where rut='"+rut+"'" );
 
-            pst.executeUpdate();
+            pst3.setString(1, txtRutProveedor.getText().trim());
+            pst3.setString(2, txtRazonSocialProveedor.getText().trim());
+            pst3.setString(3, txtNombreProveedor.getText().trim());
+            pst3.setString(4, txtTelefonoProveedor.getText().trim());
+            pst3.setString(5, txtEmailProveedor.getText().trim());
+           
+            
+            pst3.executeUpdate();        
+            
             limpiarCliente();
 
-            JOptionPane.showMessageDialog(null, "Datos del usuario actualizados", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-            limpiartabla();
+            JOptionPane.showMessageDialog(null, "Datos del Proveedor actualizados", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            limpiarTablaProveedor();
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al modificar " + e);
-            limpiarCliente();
-            limpiartabla();
+            JOptionPane.showMessageDialog(null, "Error al modificar ///" + e);
+            limpiarProvedores();
+            limpiarTablaProveedor();
             e.printStackTrace();
         }
         
@@ -562,29 +595,23 @@ public class Vista extends javax.swing.JFrame {
         Titulo_Prov2 = new javax.swing.JLabel();
         jSeparator8 = new javax.swing.JSeparator();
         jLabel15 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
-        jTextField20 = new javax.swing.JTextField();
+        txtNombreArticulo = new javax.swing.JTextField();
         jLabel28 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
+        txtMarcaArt = new javax.swing.JTextField();
         jLabel29 = new javax.swing.JLabel();
-        jLabel30 = new javax.swing.JLabel();
-        jLabel31 = new javax.swing.JLabel();
         jButton21 = new javax.swing.JButton();
         jButton22 = new javax.swing.JButton();
         jSeparator9 = new javax.swing.JSeparator();
         jLabel32 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        Tabla_Provedores2 = new javax.swing.JTable();
-        jTextField24 = new javax.swing.JTextField();
+        Tabla_Articulos = new javax.swing.JTable();
+        txtBuscarArticulo = new javax.swing.JTextField();
         jButton23 = new javax.swing.JButton();
         jButton25 = new javax.swing.JButton();
         jButton26 = new javax.swing.JButton();
         jLabel34 = new javax.swing.JLabel();
-        jTextField26 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        txtCodArticulo = new javax.swing.JTextField();
+        cbxArticulo = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         Titulo_Prov3 = new javax.swing.JLabel();
@@ -1333,7 +1360,7 @@ public class Vista extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jSeparator24, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel64, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         jPanel20Layout.setVerticalGroup(
             jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1686,12 +1713,12 @@ public class Vista extends javax.swing.JFrame {
         clientes.setLayout(clientesLayout);
         clientesLayout.setHorizontalGroup(
             clientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(clientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clientesLayout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         clientesLayout.setVerticalGroup(
             clientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1799,6 +1826,11 @@ public class Vista extends javax.swing.JFrame {
         jButton65.setText("Comprar");
 
         jButton68.setText("Editar");
+        jButton68.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton68ActionPerformed(evt);
+            }
+        });
 
         jButton69.setText("Desactivar");
 
@@ -1858,7 +1890,7 @@ public class Vista extends javax.swing.JFrame {
                         .addComponent(jTextField60, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton64)
-                        .addGap(0, 124, Short.MAX_VALUE))
+                        .addGap(0, 187, Short.MAX_VALUE))
                     .addGroup(jPanel21Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1918,7 +1950,7 @@ public class Vista extends javax.swing.JFrame {
             .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
                     .addGap(76, 76, 76)
-                    .addComponent(jSeparator25, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE)
+                    .addComponent(jSeparator25, javax.swing.GroupLayout.DEFAULT_SIZE, 897, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel21Layout.setVerticalGroup(
@@ -1991,34 +2023,22 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel15.setText("Nombre Artículo");
 
-        jTextField16.setText("Jugo YUPI 30cc");
-        jTextField16.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreArticulo.setText("Jugo YUPI 30cc");
+        txtNombreArticulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField16ActionPerformed(evt);
-            }
-        });
-
-        jLabel16.setText("Unidades");
-
-        jTextField20.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField20ActionPerformed(evt);
+                txtNombreArticuloActionPerformed(evt);
             }
         });
 
         jLabel28.setText("Marca");
 
-        jTextField21.addActionListener(new java.awt.event.ActionListener() {
+        txtMarcaArt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField21ActionPerformed(evt);
+                txtMarcaArtActionPerformed(evt);
             }
         });
 
         jLabel29.setText("Categoria Artículo");
-
-        jLabel30.setText("F. Vencimiento");
-
-        jLabel31.setText("Proveedor");
 
         jButton21.setText("Cancelar");
 
@@ -2026,25 +2046,22 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel32.setText("ARTICULOS");
 
-        Tabla_Provedores2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        Tabla_Provedores2.setModel(new javax.swing.table.DefaultTableModel(
+        Tabla_Articulos.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        Tabla_Articulos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Código", "Artículo", "Tipo Artículo", "Unidades", "F. Vencimiento", "Marca", "Proveedor", "Selección"
+                "Nombre Art", "Categoria", " Marca   ", "Codigo Art"
             }
         ));
-        Tabla_Provedores2.setColumnSelectionAllowed(true);
-        jScrollPane4.setViewportView(Tabla_Provedores2);
-        Tabla_Provedores2.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        Tabla_Articulos.setColumnSelectionAllowed(true);
+        jScrollPane4.setViewportView(Tabla_Articulos);
+        Tabla_Articulos.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jTextField24.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarArticulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField24ActionPerformed(evt);
+                txtBuscarArticuloActionPerformed(evt);
             }
         });
 
@@ -2056,72 +2073,18 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel34.setText("Codigo Artículo");
 
-        jTextField26.addActionListener(new java.awt.event.ActionListener() {
+        txtCodArticulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField26ActionPerformed(evt);
+                txtCodArticuloActionPerformed(evt);
             }
         });
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accesorio", "Bebestible", "Comestible" }));
-
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Fruna Ltda", "Coca Cola", "Distrib. El Cielo" }));
-        jComboBox3.setToolTipText("");
+        cbxArticulo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accesorio", "Bebestible", "Comestible" }));
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jSeparator9)
-                        .addContainerGap())
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Titulo_Prov2)
-                            .addGroup(jPanel12Layout.createSequentialGroup()
-                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel12Layout.createSequentialGroup()
-                                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(128, 128, 128))
-                                    .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(35, 35, 35)
-                                        .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel34, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addGap(51, 51, 51)
-                                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel12Layout.createSequentialGroup()
-                                                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addGroup(jPanel12Layout.createSequentialGroup()
-                                                        .addComponent(jButton21)
-                                                        .addGap(26, 26, 26)
-                                                        .addComponent(jButton22))
-                                                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                            .addComponent(jLabel30, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel29)
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addContainerGap(127, Short.MAX_VALUE))))
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
@@ -2131,7 +2094,7 @@ public class Vista extends javax.swing.JFrame {
                         .addGap(356, 356, 356)
                         .addComponent(jLabel32)
                         .addGap(129, 129, 129)
-                        .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton23)
                         .addGap(0, 46, Short.MAX_VALUE)))
@@ -2142,6 +2105,42 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jButton26)
                 .addGap(54, 54, 54))
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(txtNombreArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addGap(139, 139, 139)
+                                .addComponent(jButton21)
+                                .addGap(26, 26, 26)
+                                .addComponent(jButton22)
+                                .addContainerGap(127, Short.MAX_VALUE))
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel34, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbxArticulo, 0, 156, Short.MAX_VALUE)
+                                    .addComponent(txtCodArticulo))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator9)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addComponent(Titulo_Prov2)
+                                .addGap(0, 765, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtMarcaArt, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
             .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                     .addGap(76, 76, 76)
@@ -2156,44 +2155,32 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
-                    .addComponent(jTextField16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel29)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel16)
-                            .addComponent(jTextField20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel30))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel28)
-                            .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel31)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton21)
-                            .addComponent(jButton22)
-                            .addComponent(jLabel34)
-                            .addComponent(jTextField26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton23)
-                            .addComponent(jLabel32))
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton25)
-                            .addComponent(jButton26)))
-                    .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel28)
+                    .addComponent(txtMarcaArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCodArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel34))
+                .addGap(53, 53, 53)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton21)
+                    .addComponent(jButton22))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscarArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton23)
+                    .addComponent(jLabel32))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton25)
+                    .addComponent(jButton26))
                 .addContainerGap())
             .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel12Layout.createSequentialGroup()
@@ -2206,7 +2193,7 @@ public class Vista extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                     .addContainerGap(47, Short.MAX_VALUE)
@@ -2609,12 +2596,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2772,12 +2759,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2935,12 +2922,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3098,12 +3085,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel17, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3261,12 +3248,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel10.setLayout(jPanel10Layout);
         jPanel10Layout.setHorizontalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3488,12 +3475,12 @@ public class Vista extends javax.swing.JFrame {
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 920, Short.MAX_VALUE)
+            .addGap(0, 983, Short.MAX_VALUE)
             .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                    .addContainerGap(47, Short.MAX_VALUE)
+                    .addContainerGap(78, Short.MAX_VALUE)
                     .addComponent(jPanel19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(47, Short.MAX_VALUE)))
+                    .addContainerGap(79, Short.MAX_VALUE)))
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3579,25 +3566,21 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbRedSocialClienteActionPerformed
 
-    private void jTextField16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField16ActionPerformed
+    private void txtNombreArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreArticuloActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField16ActionPerformed
+    }//GEN-LAST:event_txtNombreArticuloActionPerformed
 
-    private void jTextField20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField20ActionPerformed
+    private void txtMarcaArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMarcaArtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField20ActionPerformed
+    }//GEN-LAST:event_txtMarcaArtActionPerformed
 
-    private void jTextField21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField21ActionPerformed
+    private void txtBuscarArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarArticuloActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField21ActionPerformed
+    }//GEN-LAST:event_txtBuscarArticuloActionPerformed
 
-    private void jTextField24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField24ActionPerformed
+    private void txtCodArticuloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodArticuloActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField24ActionPerformed
-
-    private void jTextField26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField26ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField26ActionPerformed
+    }//GEN-LAST:event_txtCodArticuloActionPerformed
 
     private void jTextField22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField22ActionPerformed
         // TODO add your handling code here:
@@ -3924,6 +3907,11 @@ public class Vista extends javax.swing.JFrame {
         GuardarProveedor();
         listarProveedores();
     }//GEN-LAST:event_jButton63ActionPerformed
+
+    private void jButton68ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton68ActionPerformed
+        editarPorveedor();
+        listarProveedores();
+    }//GEN-LAST:event_jButton68ActionPerformed
        
      /////////////////////////////////////////////////////////////////
     //                   USUARIO
@@ -4143,9 +4131,9 @@ public class Vista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public com.toedter.calendar.JDateChooser FechaNacimientoCliente;
     public javax.swing.JTable TablaClientes;
+    private javax.swing.JTable Tabla_Articulos;
     private javax.swing.JTable Tabla_Provedores;
     private javax.swing.JTable Tabla_Provedores1;
-    private javax.swing.JTable Tabla_Provedores2;
     private javax.swing.JTable Tabla_Provedores3;
     private javax.swing.JTable Tabla_Provedores4;
     private javax.swing.JTable Tabla_Provedores5;
@@ -4173,6 +4161,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton buscar;
     private javax.swing.JButton buscar1;
     public javax.swing.JComboBox<String> cbRedSocialCliente;
+    private javax.swing.JComboBox<String> cbxArticulo;
     public static javax.swing.JComboBox<String> cbxComunaProveedor;
     private javax.swing.JPanel clientes;
     private javax.swing.JTabbedPane compras;
@@ -4244,13 +4233,10 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JFrame jFrame1;
     private javax.swing.JFrame jFrame2;
     private javax.swing.JFrame jFrame3;
@@ -4264,7 +4250,6 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -4280,8 +4265,6 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
@@ -4428,16 +4411,11 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField16;
     public javax.swing.JTextField jTextField18;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField20;
-    private javax.swing.JTextField jTextField21;
     private javax.swing.JTextField jTextField22;
     private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField24;
     private javax.swing.JTextField jTextField25;
-    private javax.swing.JTextField jTextField26;
     private javax.swing.JTextField jTextField27;
     private javax.swing.JTextField jTextField28;
     private javax.swing.JTextField jTextField29;
@@ -4475,8 +4453,10 @@ public class Vista extends javax.swing.JFrame {
     private java.awt.MenuBar menuBar1;
     private javax.swing.JButton notificaciones;
     private javax.swing.JTable tablaUsuario;
+    private javax.swing.JTextField txtBuscarArticulo;
     public javax.swing.JTextField txtCelularCliente;
     private javax.swing.JTextField txtClave;
+    private javax.swing.JTextField txtCodArticulo;
     public static javax.swing.JTextField txtComplementoProveedor;
     private javax.swing.JTextField txtDepartamento;
     public static javax.swing.JTextField txtDireccionProveedor;
@@ -4484,6 +4464,8 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JTextField txtEmailCliente;
     public static javax.swing.JTextField txtEmailProveedor;
     private javax.swing.JTextField txtIdUsuario;
+    private javax.swing.JTextField txtMarcaArt;
+    private javax.swing.JTextField txtNombreArticulo;
     public javax.swing.JTextField txtNombreCliente;
     public static javax.swing.JTextField txtNombreProveedor;
     public static javax.swing.JTextField txtNumDireProveedor;
