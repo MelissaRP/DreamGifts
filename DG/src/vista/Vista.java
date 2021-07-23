@@ -21,7 +21,7 @@ public class Vista extends javax.swing.JFrame {
 
     Conexion con = new Conexion();
     Connection cn = con.ConexionBD();
-    DefaultTableModel modelo, modelo2;
+    DefaultTableModel modelo, modelo2, modeloCat;
     DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     int id;
     
@@ -32,6 +32,7 @@ public class Vista extends javax.swing.JFrame {
         listarCliente();        
         listarUsuario();
         listarProveedores();
+        listarCat();
         
     }
    
@@ -398,6 +399,119 @@ public class Vista extends javax.swing.JFrame {
         txtComplementoProveedor.setText("");
     }
     
+    
+    ///////////////////////////////////////////
+    ///////////// Categoria //////////////////
+    
+    //listar Categoria
+    void listarCat(){
+        
+        try {
+            PreparedStatement pst = cn.prepareStatement("select * from categoria");
+            ResultSet rs = pst.executeQuery();
+
+            Object[] categ = new Object[4];
+
+            modeloCat = (DefaultTableModel) Tabla_CategoriaArt.getModel();
+
+            while (rs.next()) {
+                categ[0] = rs.getInt("id");
+                categ[1] = rs.getString("nombre_categoria");
+                
+
+                modeloCat.addRow(categ);
+            }
+            Tabla_CategoriaArt.setModel(modeloCat);
+            addCheckBox2(2,Tabla_CategoriaArt);
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(null, "Error al Conectar  " + e);
+        }
+    }
+    
+    
+     // metodo para crear un checkbox en una columna
+    public void addCheckBox2(int column, JTable table) {
+        TableColumn tc = table.getColumnModel().getColumn(column);
+        tc.setCellEditor(table.getDefaultEditor(Boolean.class));
+        tc.setCellRenderer(table.getDefaultRenderer(Boolean.class));
+    }
+
+    public boolean IsSelected2(int row, int column, JTable table) {
+        return table.getValueAt(row, column) != null;
+    }
+    
+    
+    //metodo Guardar Cateoria
+    void guardarCategoria(){
+        try {
+            String URL_bd = "jdbc:mysql://localhost/mydb";
+            String usuario = "root";// este usuario es por default de mysql
+            String contraseña = "";// depende de como entre a la consola de mysql
+            Connection cn = DriverManager.getConnection(URL_bd, usuario, contraseña);
+            PreparedStatement pst = cn.prepareStatement("insert into categoria values(?,?)");
+            int id = 0;
+            pst.setInt(1, id);
+            pst.setString(2, txtNombreCategoria.getText().trim());
+            
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Se Guardo La Categoria Correctamente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+            limpiarTablaCat();// limpia la tabla 
+            limpiarCategoria();// limpiar campos de textos
+
+        }// cierre del bloque try
+        catch (Exception ex) {
+
+            // mensaje error al grabar
+            JOptionPane.showMessageDialog(null, "Error al intentar guardar la Categoria" + ex, "AVISO", JOptionPane.ERROR_MESSAGE);
+            limpiarTablaCat();// limpia la tabla 
+            limpiarCategoria();// limpiar campos de textos
+            ex.printStackTrace();
+        }// cierre del catch
+    }//cierre metodo Guardar Cateoria
+    
+    
+    //metodo Editar Categoria
+    void editarCategoria(){
+        try {
+            String id1 = txtCodigoCategoria.getText();
+            int id2 = Integer.parseInt(id1);
+            String URL_bd = "jdbc:mysql://localhost/mydb";
+            String usuario = "root";// este usuario es por default de mysql
+            String contraseña = "";// depende de como entre a la consola de mysql
+            Connection cn = DriverManager.getConnection(URL_bd, usuario, contraseña);
+            PreparedStatement pst = cn.prepareStatement("update categoria set nombre=? where id=" + id2);
+
+            pst.setString(1, txtNombreCategoria.getText().trim());
+            pst.executeUpdate();
+            limpiarCategoria();
+
+            JOptionPane.showMessageDialog(null, "Datos de la categoria actualizados", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            limpiarTablaCat();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar " + e);
+        }
+    }// cierre metodo Editar Categoria
+    
+    //Limpiar la tabla de  Categoria
+    public void limpiarTablaCat() {
+        DefaultTableModel model2 = (DefaultTableModel) Tabla_CategoriaArt.getModel();
+        while (Tabla_CategoriaArt.getRowCount() > 0) {
+            model2.removeRow(0);
+        }//Fin de limpiar las filas 
+    }// Cierre de Limpiar tabla Categoria
+    
+     
+    
+    // Metodo Limpiar Categoria
+    void limpiarCategoria() {
+        txtCodigoCategoria.setText("");
+        txtNombreCategoria.setText("");
+        
+    }
+    
    
 
     @SuppressWarnings("unchecked")
@@ -612,6 +726,8 @@ public class Vista extends javax.swing.JFrame {
         jLabel34 = new javax.swing.JLabel();
         txtCodArticulo = new javax.swing.JTextField();
         cbxArticulo = new javax.swing.JComboBox<>();
+        fechaVencimientoArt = new com.toedter.calendar.JDateChooser();
+        jLabel16 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jPanel13 = new javax.swing.JPanel();
         Titulo_Prov3 = new javax.swing.JLabel();
@@ -661,19 +777,19 @@ public class Vista extends javax.swing.JFrame {
         Titulo_Prov5 = new javax.swing.JLabel();
         jSeparator14 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
-        jTextField25 = new javax.swing.JTextField();
+        txtNombreCategoria = new javax.swing.JTextField();
         jLabel37 = new javax.swing.JLabel();
         jButton36 = new javax.swing.JButton();
         jButton37 = new javax.swing.JButton();
         jSeparator15 = new javax.swing.JSeparator();
         jLabel40 = new javax.swing.JLabel();
         jScrollPane9 = new javax.swing.JScrollPane();
-        Tabla_Provedores5 = new javax.swing.JTable();
-        jTextField31 = new javax.swing.JTextField();
+        Tabla_CategoriaArt = new javax.swing.JTable();
+        txtBuscarCat = new javax.swing.JTextField();
         jButton38 = new javax.swing.JButton();
         jButton39 = new javax.swing.JButton();
         jButton40 = new javax.swing.JButton();
-        jTextField32 = new javax.swing.JTextField();
+        txtCodigoCategoria = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
         Titulo_Prov6 = new javax.swing.JLabel();
@@ -2023,7 +2139,6 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel15.setText("Nombre Artículo");
 
-        txtNombreArticulo.setText("Jugo YUPI 30cc");
         txtNombreArticulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNombreArticuloActionPerformed(evt);
@@ -2073,13 +2188,21 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel34.setText("Codigo Artículo");
 
+        txtCodArticulo.setEditable(false);
+        txtCodArticulo.setDisabledTextColor(new java.awt.Color(255, 255, 204));
+        txtCodArticulo.setEnabled(false);
         txtCodArticulo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodArticuloActionPerformed(evt);
             }
         });
 
-        cbxArticulo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accesorio", "Bebestible", "Comestible" }));
+        cbxArticulo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Accesorio", "Bebestible", "Comestible", " " }));
+
+        fechaVencimientoArt.setToolTipText("");
+        fechaVencimientoArt.setDateFormatString("yyyy-MM-dd");
+
+        jLabel16.setText("Fecha de Vencimiento");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -2123,11 +2246,13 @@ public class Vista extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel34, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel34, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(cbxArticulo, 0, 156, Short.MAX_VALUE)
-                                    .addComponent(txtCodArticulo))
+                                    .addComponent(txtCodArticulo)
+                                    .addComponent(fechaVencimientoArt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2164,7 +2289,11 @@ public class Vista extends javax.swing.JFrame {
                     .addComponent(txtMarcaArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtCodArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel34))
-                .addGap(53, 53, 53)
+                .addGap(15, 15, 15)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(fechaVencimientoArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton21)
                     .addComponent(jButton22))
@@ -2618,9 +2747,9 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel19.setText("Categoria Artículo");
 
-        jTextField25.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField25ActionPerformed(evt);
+                txtNombreCategoriaActionPerformed(evt);
             }
         });
 
@@ -2629,27 +2758,35 @@ public class Vista extends javax.swing.JFrame {
         jButton36.setText("Cancelar");
 
         jButton37.setText("Guardar");
+        jButton37.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton37ActionPerformed(evt);
+            }
+        });
 
         jLabel40.setText("Lista Categoria");
 
-        Tabla_Provedores5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        Tabla_Provedores5.setModel(new javax.swing.table.DefaultTableModel(
+        Tabla_CategoriaArt.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        Tabla_CategoriaArt.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
                 "Codigo", "Nombre", "Seleccion"
             }
         ));
-        jScrollPane9.setViewportView(Tabla_Provedores5);
-        Tabla_Provedores5.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        Tabla_CategoriaArt.setColumnSelectionAllowed(true);
+        Tabla_CategoriaArt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Tabla_CategoriaArtMouseClicked(evt);
+            }
+        });
+        jScrollPane9.setViewportView(Tabla_CategoriaArt);
+        Tabla_CategoriaArt.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jTextField31.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarCat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField31ActionPerformed(evt);
+                txtBuscarCatActionPerformed(evt);
             }
         });
 
@@ -2659,9 +2796,11 @@ public class Vista extends javax.swing.JFrame {
 
         jButton40.setText("Desactivar");
 
-        jTextField32.addActionListener(new java.awt.event.ActionListener() {
+        txtCodigoCategoria.setEditable(false);
+        txtCodigoCategoria.setEnabled(false);
+        txtCodigoCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField32ActionPerformed(evt);
+                txtCodigoCategoriaActionPerformed(evt);
             }
         });
 
@@ -2679,7 +2818,7 @@ public class Vista extends javax.swing.JFrame {
                                 .addGap(39, 39, 39)
                                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtNombreCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(108, 108, 108)
                                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(jPanel15Layout.createSequentialGroup()
@@ -2689,7 +2828,7 @@ public class Vista extends javax.swing.JFrame {
                                     .addGroup(jPanel15Layout.createSequentialGroup()
                                         .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtCodigoCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(Titulo_Prov5))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -2702,7 +2841,7 @@ public class Vista extends javax.swing.JFrame {
                         .addGap(356, 356, 356)
                         .addComponent(jLabel40)
                         .addGap(129, 129, 129)
-                        .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarCat, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton38)
                         .addGap(0, 31, Short.MAX_VALUE)))
@@ -2727,9 +2866,9 @@ public class Vista extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
-                    .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNombreCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel37)
-                    .addComponent(jTextField32, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCodigoCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(88, 88, 88)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton36)
@@ -2738,7 +2877,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarCat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton38)
                     .addComponent(jLabel40))
                 .addGap(18, 18, 18)
@@ -3614,17 +3753,17 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField30ActionPerformed
 
-    private void jTextField25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField25ActionPerformed
+    private void txtNombreCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreCategoriaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField25ActionPerformed
+    }//GEN-LAST:event_txtNombreCategoriaActionPerformed
 
-    private void jTextField31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField31ActionPerformed
+    private void txtBuscarCatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCatActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField31ActionPerformed
+    }//GEN-LAST:event_txtBuscarCatActionPerformed
 
-    private void jTextField32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField32ActionPerformed
+    private void txtCodigoCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoCategoriaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField32ActionPerformed
+    }//GEN-LAST:event_txtCodigoCategoriaActionPerformed
 
     private void jTextField33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField33ActionPerformed
         // TODO add your handling code here:
@@ -3912,6 +4051,27 @@ public class Vista extends javax.swing.JFrame {
         editarPorveedor();
         listarProveedores();
     }//GEN-LAST:event_jButton68ActionPerformed
+
+    private void Tabla_CategoriaArtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Tabla_CategoriaArtMouseClicked
+        int fila = Tabla_CategoriaArt.getSelectedRow();
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "Categoria no Seleccionado");
+        } else {
+            id = Integer.parseInt((String) Tabla_CategoriaArt.getValueAt(fila, 0).toString());
+            String nom = (String) Tabla_CategoriaArt.getValueAt(fila, 1);
+            
+            txtCodigoCategoria.setText("" + id);
+            txtNombreCategoria.setText(nom);
+            
+
+        }
+    }//GEN-LAST:event_Tabla_CategoriaArtMouseClicked
+
+    private void jButton37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton37ActionPerformed
+        guardarCategoria();
+        listarCat();
+    }//GEN-LAST:event_jButton37ActionPerformed
        
      /////////////////////////////////////////////////////////////////
     //                   USUARIO
@@ -4132,11 +4292,11 @@ public class Vista extends javax.swing.JFrame {
     public com.toedter.calendar.JDateChooser FechaNacimientoCliente;
     public javax.swing.JTable TablaClientes;
     private javax.swing.JTable Tabla_Articulos;
+    private javax.swing.JTable Tabla_CategoriaArt;
     private javax.swing.JTable Tabla_Provedores;
     private javax.swing.JTable Tabla_Provedores1;
     private javax.swing.JTable Tabla_Provedores3;
     private javax.swing.JTable Tabla_Provedores4;
-    private javax.swing.JTable Tabla_Provedores5;
     private javax.swing.JTable Tabla_Provedores6;
     private javax.swing.JTable Tabla_Provedores7;
     private javax.swing.JTable Tabla_Provedores8;
@@ -4169,6 +4329,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JLabel dreamGifts;
     private javax.swing.JButton faq;
     private javax.swing.JButton faq1;
+    public com.toedter.calendar.JDateChooser fechaVencimientoArt;
     private javax.swing.JTabbedPane informes;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
@@ -4250,6 +4411,7 @@ public class Vista extends javax.swing.JFrame {
     public javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
@@ -4415,14 +4577,11 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField22;
     private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField25;
     private javax.swing.JTextField jTextField27;
     private javax.swing.JTextField jTextField28;
     private javax.swing.JTextField jTextField29;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField30;
-    private javax.swing.JTextField jTextField31;
-    private javax.swing.JTextField jTextField32;
     private javax.swing.JTextField jTextField33;
     private javax.swing.JTextField jTextField34;
     private javax.swing.JTextField jTextField35;
@@ -4454,9 +4613,11 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton notificaciones;
     private javax.swing.JTable tablaUsuario;
     private javax.swing.JTextField txtBuscarArticulo;
+    private javax.swing.JTextField txtBuscarCat;
     public javax.swing.JTextField txtCelularCliente;
     private javax.swing.JTextField txtClave;
     private javax.swing.JTextField txtCodArticulo;
+    private javax.swing.JTextField txtCodigoCategoria;
     public static javax.swing.JTextField txtComplementoProveedor;
     private javax.swing.JTextField txtDepartamento;
     public static javax.swing.JTextField txtDireccionProveedor;
@@ -4466,6 +4627,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField txtIdUsuario;
     private javax.swing.JTextField txtMarcaArt;
     private javax.swing.JTextField txtNombreArticulo;
+    private javax.swing.JTextField txtNombreCategoria;
     public javax.swing.JTextField txtNombreCliente;
     public static javax.swing.JTextField txtNombreProveedor;
     public static javax.swing.JTextField txtNumDireProveedor;
