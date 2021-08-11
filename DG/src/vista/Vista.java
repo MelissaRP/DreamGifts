@@ -39,7 +39,6 @@ public class Vista extends javax.swing.JFrame {
         listarUsuario();
         listarPack();
         listar2Pack();
-        
 
     }
 
@@ -242,10 +241,6 @@ public class Vista extends javax.swing.JFrame {
 
     }// Cierre Metodo Limpiar Cliente
     ////////////////////////FIN CLIENTE/////////////////////////////////////
-    
-    
-    
-    
 
     ////////////////////////////// Comuna //////////////////////////////
     //Metodo Listar Comuna
@@ -377,11 +372,6 @@ public class Vista extends javax.swing.JFrame {
     }// Cierre de Limpiar tabla Usuario
 
     ///////////////////////FIN COMUNA         ///////////////////////////
-    
-    
-    
-    
-    
     //////////////// Proveedores //////////////////////////////
     //Metodo Listar Proveedores
     void listarProveedores() {
@@ -845,11 +835,6 @@ public class Vista extends javax.swing.JFrame {
     }
 
     /////////////////////    Fin Categoria Art        /////////////////////////
-    
-    
-    
-    
-    
     /////////////////////         Categoria Venta             //////////////////
     //listar Categoria Venta
     void listarCatVenta() {
@@ -980,11 +965,6 @@ public class Vista extends javax.swing.JFrame {
     }
 
     /////////////////////    Fin Categoria Venta        //////////////////////
-    
-    
-    
-    
-    
     /////////////////////         RRSS             //////////////////
     //listar Categoria Venta
     void listaRRSS() {
@@ -1115,14 +1095,6 @@ public class Vista extends javax.swing.JFrame {
     }
 
     /////////////////////    Fin RRSS        //////////////////////
-    
-    
-    
-    
-    
-    
-    
-    
     /////////////////////         Articulos             //////////////////
     //Metodo listar Articulo
     void listaArticulos() {
@@ -1152,8 +1124,7 @@ public class Vista extends javax.swing.JFrame {
 
             JOptionPane.showMessageDialog(null, "Error al Conectar  " + e);
         }
-        
-        
+
     }    // cierre metodo listar Articulo
 
     //metodo Guardar RRSS
@@ -1198,8 +1169,7 @@ public class Vista extends javax.swing.JFrame {
             limpiarArticulos();// limpiar campos de textos
             ex.printStackTrace();
         }// cierre del catch
-        
-        
+
     }//cierre metodo Guardar RRSS
 
     //metodo Modificar Articulo
@@ -1293,10 +1263,6 @@ public class Vista extends javax.swing.JFrame {
     }
 
     /////////////////////    Fin Articulos        //////////////////////
-    
-    
-    
-    
     /////////////////////////////////////////////////////////////////
     //                   USUARIO                         //
     //LISTAR
@@ -1342,7 +1308,7 @@ public class Vista extends javax.swing.JFrame {
             pst.setString(3, txtClave.getText().trim());
             pst.setString(4, txtDepartamento.getText().trim());
             pst.setString(5, cbEstadoUsuario.getSelectedItem().toString());
-            
+
             pst.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Se Guardo el Usuario Correctamente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
@@ -1472,11 +1438,6 @@ public class Vista extends javax.swing.JFrame {
     }// Cierre de Limpiar tabla Usuario
 
     ////////////////////////FIN DE USUARIO//////////////////////////
-    
-    
-    
-    
-    
     ///////////////////           PACK          /////////////////////////////
     //listar Pack
     void listarPack() {
@@ -1506,7 +1467,6 @@ public class Vista extends javax.swing.JFrame {
 
     }//cerrar listar Pack
 
-    
     //listar2 Pack
     void listar2Pack() {
 
@@ -1533,112 +1493,266 @@ public class Vista extends javax.swing.JFrame {
 
     }//cerrar listar2 Pack
 
-    
-
     //metodo agregar artivculos al pack
     void agregarArtPack() {
         //declaracion de variables
-        int cantidad=0, stock_Art1 = 0, resta = 0,idstock = 0;
-        String nombreArt="";
+        int cantidad = 0, stock_Art1 = 0, resta = 0, idstock = 0;
+        String nombreArt = "";
         cantidad = Integer.parseInt(txtUnidades.getText());
         int fila = tabla_Pack1.getSelectedRow();
-         
+
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "No Seleccionado");
-        } else {
+            limpiarTablaPack2();
+        } else if (fila >= 0) {
             nombreArt = (String) tabla_Pack1.getValueAt(fila, 0).toString();
             stock_Art1 = Integer.parseInt((String) tabla_Pack1.getValueAt(fila, 1).toString());
-            
-        }
+            JOptionPane.showMessageDialog(null, "datos " + nombreArt + " " + stock_Art1);
 
-        if (stock_Art1 == 0) {
-            JOptionPane.showConfirmDialog(null, "No hay Stock Suficiente", "CANCELAR", JOptionPane.YES_NO_CANCEL_OPTION);
-            
-        } else if  (stock_Art1 > 0) {
-            resta = stock_Art1 - cantidad;
-        }else if (resta < 0) {
-            JOptionPane.showConfirmDialog(null, "Error no hay stock suficiente", "PREGUNTA", JOptionPane.OK_CANCEL_OPTION);
-        } else {
-            // Actualiza el Stock del Articulo
-            try {
-                
-                
-                String URL_bd = "jdbc:mysql://localhost/mydb";
-                String usuario = "root";// este usuario es por default de mysql
-                String contraseña = "";// depende de como entre a la consola de mysql
-                Connection cn = DriverManager.getConnection(URL_bd, usuario, contraseña);
+            if (stock_Art1 == 0) {
+                JOptionPane.showConfirmDialog(null, "No hay Stock Suficiente", "CANCELAR", JOptionPane.YES_NO_CANCEL_OPTION);
 
-                // buscamos el codigo de articulo
-                PreparedStatement pst1 = cn.prepareStatement("select cod_articulo from articulo where nombre ='" + nombreArt + "'");
-                ResultSet rs1 = pst1.executeQuery();
-                if (rs1.next()) {
-                    idstock = rs1.getInt("cod_articulo");
+            } else if (stock_Art1 > 0) {
+                resta = stock_Art1 - cantidad;
+
+                JOptionPane.showMessageDialog(null, "la resta es " + resta);
+
+                try {
+
+                    // buscamos el codigo de articulo
+                    PreparedStatement pst1 = cn.prepareStatement("select cod_articulo from articulo where nombre ='" + nombreArt + "'");
+                    ResultSet rs1 = pst1.executeQuery();
+                    if (rs1.next()) {
+                        idstock = rs1.getInt("cod_articulo");
+                    }
+
+                    // actualiza la cantidad restando el stock al articulo
+                    PreparedStatement pst = cn.prepareStatement("update articulo set stock=? where cod_articulo=" + idstock);
+                    pst.setInt(1, resta);
+                    pst.executeUpdate();
+
+                    //le colocamos contenido a Tabla donde se guardara los Art
+                    DefaultTableModel modelo2 = (DefaultTableModel) Tabla_Pack2.getModel();
+                    Object[] row = new Object[2];
+                    row[0] = nombreArt;
+                    row[1] = cantidad;
+                    modelo2.addRow(row);
+
+                    limpiarTablaPack2();
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al modificar " + e);
+                    limpiarTablaPack2();
                 }
-                
-                // actualiza la cantidad restando el stock al articulo
-                PreparedStatement pst = cn.prepareStatement("update articulo set stock=? where cod_articulo=" + idstock);
-                pst.setInt(1, resta);
-                pst.executeUpdate();
-                limpiarPack();
-                
-                
-                //le colocamos contenido a Tabla donde se guardara los Art
-                DefaultTableModel modelo2=(DefaultTableModel) Tabla_Pack2.getModel();
-                Object[] row= new Object[2];
-                   row[0]=nombreArt;
-                   row[1]=cantidad;
-                modelo2.addRow(row);   
-              
-                
 
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al modificar " + e);
-                limpiarArticulos();
-            }
-        }// cierre else   
-        
-        
-        
-        
+            } // cierre else   
 
+        }
     }// cerrar Metoido Articulos al pack
+
+    //metodo Quitamos articulo al pack
+    void quitarArtPack() {
+        //declaracion de variables
+        int cantidad = 0, stock_Art1 = 0, resta = 0, idstock = 0;
+        String nombreArt = "";
+        cantidad = Integer.parseInt(txtUnidades.getText());
+        int fila = Tabla_Pack2.getSelectedRow();
+        int stoc = 0;
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "No Seleccionado");
+        } else if (fila >= 0) {
+            nombreArt = (String) Tabla_Pack2.getValueAt(fila, 0).toString();
+            stock_Art1 = Integer.parseInt((String) Tabla_Pack2.getValueAt(fila, 1).toString());
+            JOptionPane.showMessageDialog(null, "datos: " + nombreArt + " " + stock_Art1);
+
+            if (stock_Art1 == 0) {
+                JOptionPane.showConfirmDialog(null, "No hay Stock Suficiente", "CANCELAR", JOptionPane.YES_NO_CANCEL_OPTION);
+
+            } else if (stock_Art1 > 0) {
+
+                try {
+
+                    // buscamos el codigo de articulo
+                    PreparedStatement pst1 = cn.prepareStatement("select cod_articulo,stock from articulo where nombre ='" + nombreArt + "'");
+                    ResultSet rs1 = pst1.executeQuery();
+                    if (rs1.next()) {
+                        idstock = rs1.getInt("cod_articulo");
+                        stoc = rs1.getInt("stock");
+                    }
+
+                    resta = stock_Art1 + stoc;
+
+                    // actualiza la cantidad restando el stock al articulo
+                    PreparedStatement pst = cn.prepareStatement("update articulo set stock=? where cod_articulo=" + idstock);
+                    pst.setInt(1, resta);
+                    pst.executeUpdate();
+
+                    //le colocamos contenido a Tabla donde se guardara los Art
+                    DefaultTableModel modelo2 = (DefaultTableModel) Tabla_Pack2.getModel();
+                    modelo2.removeRow(fila);
+                    limpiarTablaPack2();
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al modificar " + e);
+                    limpiarTablaPack2();
+                }
+
+            } // cierre else   
+
+        }
+    }// cerrar Quitar Articulos al pack  
 
     // guardar Pack
     void guardarPack() {
 
-        try {
-            String URL_bd = "jdbc:mysql://localhost/mydb";
-            String usuario = "root";// este usuario es por default de mysql
-            String contraseña = "";// depende de como entre a la consola de mysql
-            Connection cn = DriverManager.getConnection(URL_bd, usuario, contraseña);
-            PreparedStatement pst = cn.prepareStatement("insert into pack values(?,?,?,?,?)");
-            int id = 0;
-            pst.setInt(1, id);
-            pst.setString(2, txtNombrePack.getText().trim());
-            pst.setInt(3, Integer.parseInt(txtPrecioPack.getText().trim()));
-            pst.setString(4, txtNombreRRSS.getText().trim());
-            pst.setString(5, cbEstadoRRSS.getSelectedItem().toString());
+        String nombreAr = "";
+        String nombrePPack = txtNombrePack.getText();
+        boolean esta = false;
+        int idpack = 0;
+        int stoc = 0;
+        int cantidad = 1;
+        int idArticulo = 0;
+        int stockP = 0;
 
-            pst.executeUpdate();
+        DefaultTableModel modelox = (DefaultTableModel) Tabla_PackListar.getModel();
 
-            JOptionPane.showMessageDialog(null, "Se Guardo Correctamente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
-            limpiarTablaRRSS();// limpia la tabla 
-            limpiarRRSS();// limpiar campos de textos
+        if (nombrePPack != null) {
 
-        }// cierre del bloque try
-        catch (Exception ex) {
+            for (int i = 0; i < modelox.getRowCount(); i++) {
+                nombreAr = Tabla_PackListar.getValueAt(i, 1).toString();
+                if (nombreAr == nombrePPack) {
+                    cantidad = (Integer.parseInt(Tabla_PackListar.getValueAt(i, 3).toString())) + 1;
+                }
+            }//cierre for 
 
-            // mensaje error al grabar
-            JOptionPane.showMessageDialog(null, "Error al intentar guardar " + ex, "AVISO", JOptionPane.ERROR_MESSAGE);
-            limpiarTablaRRSS();// limpia la tabla 
-            limpiarRRSS();// limpiar campos de textos
-            ex.printStackTrace();
-        }// cierre del catch
+            if (nombreAr == nombrePPack) {
+
+                try {
+                    //Actualizar el Stock
+                    PreparedStatement pst = cn.prepareStatement("update stock_pack set pack where nombre='" + nombrePPack + "'");
+                    ResultSet rs = pst.executeQuery();
+                    if (rs.next()) {
+                        pst.setInt(1, cantidad);
+                    }
+
+                    JOptionPane.showMessageDialog(null, "Se Guardo Correctamente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+                    limpiarTablaPack(); // limpia la tabla 
+                    limpiarPack();// limpiar campos de textos
+                    limpiarTablaPack3();
+
+                } catch (Exception ex) {
+
+                    // mensaje error al grabar
+                    JOptionPane.showMessageDialog(null, "Error al intentar guardar " + ex, "AVISO", JOptionPane.ERROR_MESSAGE);
+                    limpiarTablaPack(); // limpia la tabla 
+                    limpiarPack();// limpiar campos de textos
+                    limpiarTablaPack3();
+
+                }// cierre del catch
+
+            } else {
+
+                try {
+
+                    PreparedStatement pst = cn.prepareStatement("insert into pack values(?,?,?,?,?)");
+                    int id = 0;
+                    pst.setInt(1, id);
+                    pst.setString(2, txtNombrePack.getText().trim());
+                    pst.setInt(3, Integer.parseInt(txtPrecioPack.getText().trim()));
+                    pst.setInt(4, cantidad);
+                    pst.setString(5, cbEstadoRRSS.getSelectedItem().toString());
+
+                    pst.executeUpdate();
+
+                    PreparedStatement pst1 = cn.prepareStatement("select cod_pack from pack where nombre='" + nombrePPack + "'");
+                    ResultSet rs1 = pst1.executeQuery();
+                    if (rs1.next()) {
+                        idpack = rs1.getInt("cod_pack");
+
+                    }
+
+                    DefaultTableModel modelox2 = (DefaultTableModel) Tabla_Pack2.getModel();
+
+                    for (int i = 0; i < modelox2.getRowCount(); i++) {
+                        String nombArticulo = Tabla_Pack2.getValueAt(i, 0).toString();
+                        int CantArt1 = Integer.parseInt(Tabla_Pack2.getValueAt(i, 1).toString());
+
+                        PreparedStatement pst3 = cn.prepareStatement("select cod_articulo from articulo where nombre='" + nombArticulo + "'");
+                        ResultSet rs3 = pst3.executeQuery();
+                        if (rs3.next()) {
+                            idArticulo = rs3.getInt("cod_articulo");
+
+                        }
+
+                        PreparedStatement pst2 = cn.prepareStatement("insert into pack_has_articulo values(?,?,?)");
+
+                        pst2.setInt(1, idpack);
+                        pst2.setInt(2, idArticulo);
+                        pst2.setInt(3, CantArt1);
+
+                        pst2.executeUpdate();
+                    }
+
+                    JOptionPane.showMessageDialog(null, "Se Guardo Correctamente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+                    limpiarTablaPack(); // limpia la tabla 
+                    limpiarPack();// limpiar campos de textos
+                    limpiarTablaPack3();
+
+                }// cierre del bloque try
+                catch (Exception ex) {
+
+                    // mensaje error al grabar
+                    JOptionPane.showMessageDialog(null, "Error al intentar guardar " + ex, "AVISO", JOptionPane.ERROR_MESSAGE);
+                    limpiarTablaPack(); // limpia la tabla 
+                    limpiarPack();// limpiar campos de textos
+                    limpiarTablaPack3();
+                }// cierre del catch
+            }//else     
+        } // Cierre If
 
     }//cerrar guardar Pack
 
     // Modificar Pack
     void modificarPack() {
+        
+        try {
+
+            String id1 = txtCodigoPack.getText();
+            int id2 = Integer.parseInt(id1);
+            
+            PreparedStatement pst = cn.prepareStatement("update pack set nombre=?,precio=?,estado=? where cod_pack=" + id2);
+
+            pst.setString(1, txtNombrePack.getText().trim());
+            pst.setString(2, txtPrecioPack.getText().trim());
+            pst.setString(4, cbEstadoPack.getSelectedItem().toString());
+
+            pst.executeUpdate();
+            
+            
+           /* DefaultTableModel modelox2 = (DefaultTableModel) Tabla_Pack2.getModel();
+            
+            PreparedStatement pst2 = cn.prepareStatement("update pack_has_articulo  set cantidad=? where PACK_cod_pack =" + id2);
+
+            pst2.setString(1, txtNombrePack.getText().trim());
+            pst2.setString(2, txtPrecioPack.getText().trim());
+            pst2.setString(4, cbEstadoPack.getSelectedItem().toString());
+
+            pst2.executeUpdate();*/
+            
+            
+            
+            
+            limpiarPack();
+
+            JOptionPane.showMessageDialog(null, "Datos del usuario actualizados", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            limpiarTablaPack();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al modificar " + e);
+        }
+        
+        
 
     }//cerrar Modificar Pack
 
@@ -1650,12 +1764,21 @@ public class Vista extends javax.swing.JFrame {
         txtPrecioPack.setText("");
         cbEstadoPack.setSelectedIndex(0);
 
+    }//cerrar limpiar caja textos
+
+    void limpiarTablaPack3() {
         DefaultTableModel model1 = (DefaultTableModel) Tabla_Pack2.getModel();
         while (Tabla_Pack2.getRowCount() > 0) {
             model1.removeRow(0);
         }
+    }
 
-    }//cerrar limpiar caja textos
+    void limpiarTablaPack2() {
+        DefaultTableModel model1 = (DefaultTableModel) tabla_Pack1.getModel();
+        while (tabla_Pack1.getRowCount() > 0) {
+            model1.removeRow(0);
+        }
+    }
 
     // limpiar Tabla Pack
     void limpiarTablaPack() {
@@ -1665,21 +1788,10 @@ public class Vista extends javax.swing.JFrame {
         }//Fin de limpiar las filas 
 
     }//cerrar limpiar Tabla Pack
-    
 
     ///////////////////////// FIN DE PACK  //////////////////////////////
-    
-    
-    
     ///////////////////////// Ventas  //////////////////////////////
-    
-    
-    
     ///////////////////////// FIN DE Ventas  //////////////////////////////
-    
-    
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1756,6 +1868,7 @@ public class Vista extends javax.swing.JFrame {
         jButton12 = new javax.swing.JButton();
         jButton13 = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
+        jSeparator56 = new javax.swing.JSeparator();
         dreamGifts = new javax.swing.JLabel();
         notificaciones = new javax.swing.JButton();
         configuracion = new javax.swing.JButton();
@@ -2000,7 +2113,6 @@ public class Vista extends javax.swing.JFrame {
         jPanel31 = new javax.swing.JPanel();
         jSeparator55 = new javax.swing.JSeparator();
         jLabel146 = new javax.swing.JLabel();
-        jSeparator56 = new javax.swing.JSeparator();
         jLabel147 = new javax.swing.JLabel();
         jLabel148 = new javax.swing.JLabel();
         FechaNacimientoCliente13 = new com.toedter.calendar.JDateChooser();
@@ -2122,7 +2234,6 @@ public class Vista extends javax.swing.JFrame {
         jSeparator11 = new javax.swing.JSeparator();
         jLabel38 = new javax.swing.JLabel();
         jTextField27 = new javax.swing.JTextField();
-        jButton28 = new javax.swing.JButton();
         txtPrecioPack = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txtUnidades = new javax.swing.JTextField();
@@ -2141,6 +2252,8 @@ public class Vista extends javax.swing.JFrame {
         txtCodigoPack = new javax.swing.JTextField();
         jLabel84 = new javax.swing.JLabel();
         txtCantidadPack = new javax.swing.JTextField();
+        jLabel153 = new javax.swing.JLabel();
+        txtlimpiarArtlista = new javax.swing.JButton();
         jPanel6 = new javax.swing.JPanel();
         jPanel14 = new javax.swing.JPanel();
         Titulo_Prov4 = new javax.swing.JLabel();
@@ -4398,16 +4511,6 @@ public class Vista extends javax.swing.JFrame {
                     .addContainerGap()
                     .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jSeparator57)
-                        .addGroup(jPanel31Layout.createSequentialGroup()
-                            .addComponent(jSeparator55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel146)
-                            .addGap(18, 18, 18)
-                            .addComponent(jSeparator56))
-                        .addGroup(jPanel31Layout.createSequentialGroup()
-                            .addGap(188, 188, 188)
-                            .addComponent(jLabel152)
-                            .addGap(0, 0, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel31Layout.createSequentialGroup()
                             .addGap(0, 105, Short.MAX_VALUE)
                             .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -4438,7 +4541,17 @@ public class Vista extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel31Layout.createSequentialGroup()
                                     .addComponent(jButton86, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(89, 89, 89))))
-                        .addComponent(jScrollPane26))
+                        .addComponent(jScrollPane26)
+                        .addGroup(jPanel31Layout.createSequentialGroup()
+                            .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel31Layout.createSequentialGroup()
+                                    .addComponent(jSeparator55, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabel146))
+                                .addGroup(jPanel31Layout.createSequentialGroup()
+                                    .addGap(188, 188, 188)
+                                    .addComponent(jLabel152)))
+                            .addGap(0, 0, Short.MAX_VALUE)))
                     .addContainerGap()))
         );
         jPanel31Layout.setVerticalGroup(
@@ -4449,8 +4562,7 @@ public class Vista extends javax.swing.JFrame {
                     .addGap(32, 32, 32)
                     .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jSeparator55, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel146)
-                        .addComponent(jSeparator56, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel146))
                     .addGap(7, 7, 7)
                     .addComponent(jLabel147)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -4482,6 +4594,12 @@ public class Vista extends javax.swing.JFrame {
         informes.addTab("Informe Dev. y Cambio", jPanel31);
 
         jTabbedPane4.addTab("Informes", informes);
+
+        maestros.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                maestrosMouseClicked(evt);
+            }
+        });
 
         Titulo_Prov1.setText("Clientes");
 
@@ -5088,6 +5206,12 @@ public class Vista extends javax.swing.JFrame {
 
         maestros.addTab("Proveedores", jPanel21);
 
+        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel4MouseClicked(evt);
+            }
+        });
+
         Titulo_Prov2.setText("Artículos");
 
         jLabel15.setText("Nombre Artículo");
@@ -5345,6 +5469,11 @@ public class Vista extends javax.swing.JFrame {
         });
 
         jButton27.setText("Crear PACK");
+        jButton27.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton27ActionPerformed(evt);
+            }
+        });
 
         jLabel38.setText("TABLA  PACKS");
 
@@ -5353,8 +5482,6 @@ public class Vista extends javax.swing.JFrame {
                 jTextField27ActionPerformed(evt);
             }
         });
-
-        jButton28.setText("Buscar");
 
         txtPrecioPack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -5410,10 +5537,23 @@ public class Vista extends javax.swing.JFrame {
             }
         ));
         Tabla_PackListar.setColumnSelectionAllowed(true);
+        Tabla_PackListar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Tabla_PackListarMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                Tabla_PackListarMouseEntered(evt);
+            }
+        });
         jScrollPane5.setViewportView(Tabla_PackListar);
         Tabla_PackListar.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         jButton29.setText("Editar");
+        jButton29.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton29ActionPerformed(evt);
+            }
+        });
 
         jLabel82.setText("Estado");
 
@@ -5438,11 +5578,22 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel84.setText("Cantidad");
 
+        txtCantidadPack.setEditable(false);
         txtCantidadPack.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         txtCantidadPack.setForeground(new java.awt.Color(51, 153, 0));
+        txtCantidadPack.setEnabled(false);
         txtCantidadPack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCantidadPackActionPerformed(evt);
+            }
+        });
+
+        jLabel153.setText("buscar");
+
+        txtlimpiarArtlista.setText("limpiar Caja Art");
+        txtlimpiarArtlista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtlimpiarArtlistaActionPerformed(evt);
             }
         });
 
@@ -5454,14 +5605,15 @@ public class Vista extends javax.swing.JFrame {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator11)
                     .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGap(317, 317, 317)
+                        .addComponent(jLabel38)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel153)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(181, 181, 181))
+                    .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGap(317, 317, 317)
-                                .addComponent(jLabel38)
-                                .addGap(141, 141, 141)
-                                .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton28))
                             .addGroup(jPanel13Layout.createSequentialGroup()
                                 .addGap(51, 51, 51)
                                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 823, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -5491,32 +5643,35 @@ public class Vista extends javax.swing.JFrame {
                                         .addComponent(jLabel82))
                                     .addGroup(jPanel13Layout.createSequentialGroup()
                                         .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addGroup(jPanel13Layout.createSequentialGroup()
                                                 .addGap(49, 49, 49)
                                                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                     .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel13Layout.createSequentialGroup()
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(txtUnidades)))
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGap(56, 56, 56)
                                         .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbEstadoPack, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel13Layout.createSequentialGroup()
                                         .addComponent(jButton24)
                                         .addGap(26, 26, 26)
-                                        .addComponent(jButton27)))))
+                                        .addComponent(jButton27))
+                                    .addComponent(cbEstadoPack, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel13Layout.createSequentialGroup()
+                                .addGap(373, 373, 373)
+                                .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 79, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addGap(373, 373, 373)
-                .addComponent(jButton29, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(txtlimpiarArtlista)
+                .addGap(400, 400, 400))
             .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
                     .addContainerGap(72, Short.MAX_VALUE)
@@ -5529,26 +5684,22 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(Titulo_Prov3)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel13Layout.createSequentialGroup()
+                        .addGap(146, 146, 146)
+                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton24)
+                            .addComponent(jButton27)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGap(146, 146, 146)
-                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton24)
-                                    .addComponent(jButton27))
-                                .addGap(0, 13, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
-                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                                        .addComponent(jButton9)
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(txtUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel4))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton10))
-                                    .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(35, 35, 35))
+                                .addComponent(jButton9)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtUnidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton10))
+                            .addComponent(jScrollPane16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel13Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -5565,14 +5716,16 @@ public class Vista extends javax.swing.JFrame {
                             .addComponent(jLabel82)
                             .addComponent(cbEstadoPack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane15, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(1, 1, 1)
+                .addComponent(txtlimpiarArtlista)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22)
+                .addGap(23, 23, 23)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton28)
-                    .addComponent(jLabel38))
+                    .addComponent(jLabel38)
+                    .addComponent(jLabel153))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -6961,11 +7114,13 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPrecioPackActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-       agregarArtPack();
+        agregarArtPack();
+        listar2Pack();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
+        quitarArtPack();
+        listar2Pack();
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void txtNombreRRSSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreRRSSActionPerformed
@@ -7553,7 +7708,7 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCantidadPackActionPerformed
 
     private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
-        // TODO add your handling code here:
+        limpiarPack();
     }//GEN-LAST:event_jButton24ActionPerformed
 
     private void cbEstadoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbEstadoUsuarioActionPerformed
@@ -7611,6 +7766,93 @@ public class Vista extends javax.swing.JFrame {
     private void jButton86ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton86ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton86ActionPerformed
+
+    private void maestrosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_maestrosMouseClicked
+        limpiarTablaPack2();
+        listar2Pack();
+
+        limpiarTablaArticulos();
+        listaArticulos();
+    }//GEN-LAST:event_maestrosMouseClicked
+
+    private void jPanel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseClicked
+
+    }//GEN-LAST:event_jPanel4MouseClicked
+
+    private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
+        guardarPack();
+        listarPack();
+    }//GEN-LAST:event_jButton27ActionPerformed
+
+    private void Tabla_PackListarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Tabla_PackListarMouseClicked
+        int fila = Tabla_PackListar.getSelectedRow();
+        int codigArt = 0;
+
+        if (fila == -1) {
+            JOptionPane.showMessageDialog(null, "No Seleccionado");
+        } else {
+            String cod_Pack = (String) Tabla_PackListar.getValueAt(fila, 0).toString();
+            String nombrePack = (String) Tabla_PackListar.getValueAt(fila, 1);
+            String precio = (String) Tabla_PackListar.getValueAt(fila, 2).toString();
+            String stock = (String) Tabla_PackListar.getValueAt(fila, 3).toString();
+            String estado = (String) Tabla_PackListar.getValueAt(fila, 4);
+
+            txtCodigoPack.setText(cod_Pack);
+            txtNombrePack.setText(nombrePack);
+            txtPrecioPack.setText(precio);
+            txtCantidadPack.setText(stock);
+            cbEstadoPack.setSelectedItem(estado);
+            
+            limpiarTablaPack3();
+
+            try {
+                int codigoPack = Integer.parseInt(cod_Pack);
+               
+                PreparedStatement pst1 = cn.prepareStatement("select pa.ARTICULO_cod_articulo from pack as p, pack_has_articulo as pa  where PACK_cod_pack ='" + codigoPack + "'  ");
+                ResultSet rs1 = pst1.executeQuery();
+                while (rs1.next()) {
+                    codigArt = rs1.getInt("pa.ARTICULO_cod_articulo");
+                }
+
+                PreparedStatement pst = cn.prepareStatement("select a.nombre,pa.cantidad from pack_has_articulo as pa, articulo as a, pack as p where pa.PACK_cod_pack = '"+codigoPack+"' and pa.ARTICULO_cod_articulo = a.cod_articulo GROUP by a.nombre" );
+                ResultSet rs = pst.executeQuery();
+
+                Object[] categ = new Object[2];
+
+                modeloPack = (DefaultTableModel) Tabla_Pack2.getModel();
+
+                while (rs.next()) {
+                    categ[0] = rs.getString("a.nombre");
+                    categ[1] = rs.getInt("pa.cantidad");
+
+                    modeloPack.addRow(categ);
+                }
+                Tabla_Pack2.setModel(modeloPack);
+               
+
+            } catch (Exception e) {
+
+                JOptionPane.showMessageDialog(null, "Error al Conectar  " + e);
+                limpiarTablaPack3();
+            }
+
+        }
+    }//GEN-LAST:event_Tabla_PackListarMouseClicked
+
+    private void Tabla_PackListarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Tabla_PackListarMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Tabla_PackListarMouseEntered
+
+    private void txtlimpiarArtlistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtlimpiarArtlistaActionPerformed
+        limpiarTablaPack3();
+    }//GEN-LAST:event_txtlimpiarArtlistaActionPerformed
+
+    private void jButton29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton29ActionPerformed
+        modificarPack();
+        limpiarPack();
+        limpiarTablaPack();
+        listarPack();
+    }//GEN-LAST:event_jButton29ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -7738,7 +7980,6 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton jButton25;
     private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton27;
-    private javax.swing.JButton jButton28;
     private javax.swing.JButton jButton29;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton30;
@@ -7883,6 +8124,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel150;
     private javax.swing.JLabel jLabel151;
     private javax.swing.JLabel jLabel152;
+    private javax.swing.JLabel jLabel153;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
@@ -8231,6 +8473,7 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField txtUnidades;
     private javax.swing.JTextField txtUsuario;
     private javax.swing.JTextField txtbuscarUsuario;
+    private javax.swing.JButton txtlimpiarArtlista;
     private javax.swing.JTabbedPane ventas;
     // End of variables declaration//GEN-END:variables
 }
