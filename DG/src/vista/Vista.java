@@ -2361,7 +2361,7 @@ public class Vista extends javax.swing.JFrame {
         jLabel42 = new javax.swing.JLabel();
         jScrollPane10 = new javax.swing.JScrollPane();
         Tabla_Comuna = new javax.swing.JTable();
-        jTextField34 = new javax.swing.JTextField();
+        txtBuscarComuna = new javax.swing.JTextField();
         jButton43 = new javax.swing.JButton();
         jButton44 = new javax.swing.JButton();
         jButton45 = new javax.swing.JButton();
@@ -2379,7 +2379,7 @@ public class Vista extends javax.swing.JFrame {
         jLabel44 = new javax.swing.JLabel();
         jScrollPane11 = new javax.swing.JScrollPane();
         Tabla_Banco = new javax.swing.JTable();
-        jTextField37 = new javax.swing.JTextField();
+        txtBuscarBanco = new javax.swing.JTextField();
         jButton48 = new javax.swing.JButton();
         jButton49 = new javax.swing.JButton();
         jButton50 = new javax.swing.JButton();
@@ -2399,7 +2399,7 @@ public class Vista extends javax.swing.JFrame {
         jLabel47 = new javax.swing.JLabel();
         jScrollPane12 = new javax.swing.JScrollPane();
         Tabla_CatVenta = new javax.swing.JTable();
-        jTextField40 = new javax.swing.JTextField();
+        txtBuscarCatVent = new javax.swing.JTextField();
         jButton53 = new javax.swing.JButton();
         jButton54 = new javax.swing.JButton();
         jButton55 = new javax.swing.JButton();
@@ -6042,6 +6042,11 @@ public class Vista extends javax.swing.JFrame {
                 txtBuscarCatActionPerformed(evt);
             }
         });
+        txtBuscarCat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarCatKeyReleased(evt);
+            }
+        });
 
         jButton38.setText("Buscar");
 
@@ -6240,9 +6245,14 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane10.setViewportView(Tabla_Comuna);
         Tabla_Comuna.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jTextField34.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarComuna.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField34ActionPerformed(evt);
+                txtBuscarComunaActionPerformed(evt);
+            }
+        });
+        txtBuscarComuna.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarComunaKeyReleased(evt);
             }
         });
 
@@ -6307,7 +6317,7 @@ public class Vista extends javax.swing.JFrame {
                         .addGap(356, 356, 356)
                         .addComponent(jLabel42)
                         .addGap(129, 129, 129)
-                        .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarComuna, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton43)
                         .addGap(0, 53, Short.MAX_VALUE)))
@@ -6343,7 +6353,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jSeparator17, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarComuna, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton43)
                     .addComponent(jLabel42))
                 .addGap(18, 18, 18)
@@ -6425,9 +6435,14 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane11.setViewportView(Tabla_Banco);
         Tabla_Banco.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jTextField37.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarBanco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField37ActionPerformed(evt);
+                txtBuscarBancoActionPerformed(evt);
+            }
+        });
+        txtBuscarBanco.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarBancoKeyReleased(evt);
             }
         });
 
@@ -6506,7 +6521,7 @@ public class Vista extends javax.swing.JFrame {
                         .addGap(356, 356, 356)
                         .addComponent(jLabel44)
                         .addGap(129, 129, 129)
-                        .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton48)
                         .addGap(0, 62, Short.MAX_VALUE)))
@@ -6546,7 +6561,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jSeparator19, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarBanco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton48)
                     .addComponent(jLabel44))
                 .addGap(18, 18, 18)
@@ -6628,9 +6643,14 @@ public class Vista extends javax.swing.JFrame {
         jScrollPane12.setViewportView(Tabla_CatVenta);
         Tabla_CatVenta.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
-        jTextField40.addActionListener(new java.awt.event.ActionListener() {
+        txtBuscarCatVent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField40ActionPerformed(evt);
+                txtBuscarCatVentActionPerformed(evt);
+            }
+        });
+        txtBuscarCatVent.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarCatVentKeyReleased(evt);
             }
         });
 
@@ -6711,7 +6731,7 @@ public class Vista extends javax.swing.JFrame {
                         .addGap(224, 224, 224)
                         .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(129, 129, 129)
-                        .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBuscarCatVent, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton53)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -6751,7 +6771,7 @@ public class Vista extends javax.swing.JFrame {
                 .addComponent(jSeparator21, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22)
                 .addGroup(jPanel18Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscarCatVent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton53)
                     .addComponent(jLabel47))
                 .addGap(18, 18, 18)
@@ -6848,6 +6868,11 @@ public class Vista extends javax.swing.JFrame {
         txtbuscarUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtbuscarUsuarioActionPerformed(evt);
+            }
+        });
+        txtbuscarUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtbuscarUsuarioKeyReleased(evt);
             }
         });
 
@@ -7155,9 +7180,9 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreComunaActionPerformed
 
-    private void jTextField34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField34ActionPerformed
+    private void txtBuscarComunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarComunaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField34ActionPerformed
+    }//GEN-LAST:event_txtBuscarComunaActionPerformed
 
     private void txtCodigoComunaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoComunaActionPerformed
         // TODO add your handling code here:
@@ -7167,9 +7192,9 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreBancoActionPerformed
 
-    private void jTextField37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField37ActionPerformed
+    private void txtBuscarBancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarBancoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField37ActionPerformed
+    }//GEN-LAST:event_txtBuscarBancoActionPerformed
 
     private void txtCodigoBancoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoBancoActionPerformed
         // TODO add your handling code here:
@@ -7179,9 +7204,9 @@ public class Vista extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCatVentaActionPerformed
 
-    private void jTextField40ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField40ActionPerformed
+    private void txtBuscarCatVentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscarCatVentActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField40ActionPerformed
+    }//GEN-LAST:event_txtBuscarCatVentActionPerformed
 
     private void txtCodigoCatVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoCatVentaActionPerformed
         // TODO add your handling code here:
@@ -7878,6 +7903,35 @@ public class Vista extends javax.swing.JFrame {
         filtro(txtBuscarRRSS.getText().toUpperCase(), Tabla_RRSS);
     }//GEN-LAST:event_txtBuscarRRSSKeyReleased
 
+    private void txtBuscarCatKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarCatKeyReleased
+        // TODO add your handling code here:
+        filtro(txtBuscarCat.getText().toUpperCase(), Tabla_CategoriaArt);
+    }//GEN-LAST:event_txtBuscarCatKeyReleased
+
+    private void txtBuscarComunaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarComunaKeyReleased
+        // TODO add your handling code here:
+        filtro(txtBuscarComuna.getText().toUpperCase(), Tabla_Comuna);
+        
+    }//GEN-LAST:event_txtBuscarComunaKeyReleased
+
+    private void txtBuscarBancoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarBancoKeyReleased
+        // TODO add your handling code here:
+        filtro(txtBuscarBanco.getText().toUpperCase(), Tabla_Banco);
+        
+    }//GEN-LAST:event_txtBuscarBancoKeyReleased
+
+    private void txtBuscarCatVentKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarCatVentKeyReleased
+        // TODO add your handling code here:
+        filtro(txtBuscarCatVent.getText().toUpperCase(), Tabla_CatVenta);
+        
+    }//GEN-LAST:event_txtBuscarCatVentKeyReleased
+
+    private void txtbuscarUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarUsuarioKeyReleased
+        // TODO add your handling code here:
+        filtro(txtbuscarUsuario.getText().toUpperCase(), tablaUsuario);
+        
+    }//GEN-LAST:event_txtbuscarUsuarioKeyReleased
+
     
     
     /**
@@ -8422,13 +8476,10 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField31;
     private javax.swing.JTextField jTextField32;
     private javax.swing.JTextField jTextField33;
-    private javax.swing.JTextField jTextField34;
     private javax.swing.JTextField jTextField35;
     private javax.swing.JTextField jTextField36;
-    private javax.swing.JTextField jTextField37;
     private javax.swing.JTextField jTextField38;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField40;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField55;
     private javax.swing.JTextField jTextField58;
@@ -8445,7 +8496,10 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JTextField txtArtStock;
     public javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtBuscarArticulo;
+    private javax.swing.JTextField txtBuscarBanco;
     private javax.swing.JTextField txtBuscarCat;
+    private javax.swing.JTextField txtBuscarCatVent;
+    private javax.swing.JTextField txtBuscarComuna;
     private javax.swing.JTextField txtBuscarPack;
     public static javax.swing.JTextField txtBuscarProv;
     private javax.swing.JTextField txtBuscarRRSS;

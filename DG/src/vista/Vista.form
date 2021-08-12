@@ -6848,6 +6848,7 @@
                     <Component class="javax.swing.JTextField" name="txtBuscarCat">
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarCatActionPerformed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarCatKeyReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButton38">
@@ -6983,7 +6984,7 @@
                                       <EmptySpace min="-2" pref="356" max="-2" attributes="0"/>
                                       <Component id="jLabel42" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
-                                      <Component id="jTextField34" min="-2" pref="153" max="-2" attributes="0"/>
+                                      <Component id="txtBuscarComuna" min="-2" pref="153" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jButton43" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="53" max="32767" attributes="0"/>
@@ -7028,7 +7029,7 @@
                               <Component id="jSeparator17" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jTextField34" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtBuscarComuna" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButton43" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel42" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -7140,9 +7141,10 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JTextField" name="jTextField34">
+                    <Component class="javax.swing.JTextField" name="txtBuscarComuna">
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField34ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarComunaActionPerformed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarComunaKeyReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButton43">
@@ -7264,7 +7266,7 @@
                                       <EmptySpace min="-2" pref="356" max="-2" attributes="0"/>
                                       <Component id="jLabel44" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
-                                      <Component id="jTextField37" min="-2" pref="153" max="-2" attributes="0"/>
+                                      <Component id="txtBuscarBanco" min="-2" pref="153" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jButton48" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="62" max="32767" attributes="0"/>
@@ -7314,7 +7316,7 @@
                               <Component id="jSeparator19" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jTextField37" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtBuscarBanco" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButton48" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel44" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -7432,9 +7434,10 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JTextField" name="jTextField37">
+                    <Component class="javax.swing.JTextField" name="txtBuscarBanco">
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField37ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarBancoActionPerformed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarBancoKeyReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButton48">
@@ -7582,7 +7585,7 @@
                                       <EmptySpace min="-2" pref="224" max="-2" attributes="0"/>
                                       <Component id="jLabel47" min="-2" pref="173" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="129" max="-2" attributes="0"/>
-                                      <Component id="jTextField40" min="-2" pref="153" max="-2" attributes="0"/>
+                                      <Component id="txtBuscarCatVent" min="-2" pref="153" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Component id="jButton53" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -7632,7 +7635,7 @@
                               <Component id="jSeparator21" min="-2" pref="10" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="jTextField40" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtBuscarCatVent" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jButton53" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -7750,9 +7753,10 @@
                         </Component>
                       </SubComponents>
                     </Container>
-                    <Component class="javax.swing.JTextField" name="jTextField40">
+                    <Component class="javax.swing.JTextField" name="txtBuscarCatVent">
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField40ActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtBuscarCatVentActionPerformed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarCatVentKeyReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButton53">
@@ -8108,6 +8112,7 @@
                     <Component class="javax.swing.JTextField" name="txtbuscarUsuario">
                       <Events>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtbuscarUsuarioActionPerformed"/>
+                        <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtbuscarUsuarioKeyReleased"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnbuscarUsuario">
